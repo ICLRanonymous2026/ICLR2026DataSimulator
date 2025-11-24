@@ -1,4 +1,6 @@
-from ..src.simulator.multi_res_generation_with_seg import generate_emitters_scenarios, generate_and_store_spectrum_multi
+import sys 
+sys.path.append('/data/RAWSIM/RMA/Thesis_work')
+from iclr_simulator.simulator.multi_res_generation_with_seg import generate_emitters_scenarios, generate_and_store_spectrum_multi
 
 F_E = 4e9
 acquisition_time = 2048 * 64 / F_E

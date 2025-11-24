@@ -473,7 +473,8 @@ def resize_to_pow2(spec: torch.Tensor,
 
 def rebuild_labels_from_pulsesfile_json_like(
     pulses: list,
-    output_json: Path
+    output_json: Path, 
+    name_to_class_id = NAME_TO_CLASS_ID
 ) -> None:
     """
     Rebuilds YOLO-like labels from an in-memory list of pulses and writes
@@ -753,7 +754,8 @@ def generate_and_store_spectrum_multi(
     train_ratio: float = 0.8,
     acquisition_time=1e-3,
     pow2_resize=True,
-    snr_max_base=20):
+    snr_max_base=20, 
+    class_index_to_name = CLASS_INDEX_TO_NAME):
     """
     Génère un dataset multi-résolution avec PSNR/SNR,
     spectres normalisés et labels de détection/segmentation.
@@ -769,6 +771,8 @@ def generate_and_store_spectrum_multi(
         ]
 
     fe = stft_cfgs[0]["fs"]
+
+    name_to_class_id = {v: k for k, v in class_index_to_name.items()}
 
     # --------------------
     # Seed
@@ -866,7 +870,7 @@ def generate_and_store_spectrum_multi(
             torch.save(spectra_norm_list, os.path.join(dirs["data"], base_name + ".pt"))
 
             label_json = Path(dirs["labels_detect"]) / f"{base_name}.json"
-            rebuild_labels_from_pulsesfile_json_like(pulses, label_json)
+            rebuild_labels_from_pulsesfile_json_like(pulses, label_json, name_to_class_id = name_to_class_id)
 
             # --- EXAMPLES pour les 3 premiers scénarios ---
             if idx_counter < 3:
